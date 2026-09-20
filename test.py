@@ -3,7 +3,7 @@ To test using custom config.yaml file use commands:
 
 Process entire directories of files with a single command:
  Parse all documents in a directory
-    synthetic-data-kit -c config.yaml ingest ./documents/
+    synthetic-data-kit -c config.yaml ingest ./resources/
         # Processes all .pdf, .html, .docx, .pptx, .txt files
         # Saves parsed text files to data/parsed/
 

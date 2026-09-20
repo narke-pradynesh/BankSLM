@@ -2,8 +2,248 @@ llm:
   provider: "api-endpoint"
 
 api-endpoint:
-  api_base: "https://api.llama.com/v1"
-  api_key: "llama-api-key"
-  model: "Llama-4-Maverick-17B-128E-Instruct-FP8"
-  max_retries: 3 
+  api_base: "https://openrouter.ai/api/v1"
+  api_key: "${OPENROUTER_API_KEY}"
+  model: "nvidia/nemotron-3.5-lightning:free"
+  max_retries: 3
   sleep_time: 0.5
+
+
+# Ingest configuration
+ingest:
+  default_format: "txt"
+  youtube_captions: "auto"
+
+
+# LLM generation parameters
+generation:
+  temperature: 0.7
+  top_p: 0.95
+
+  # Document processing strategy
+  processing_strategy: "auto"
+  single_call_max_size: 8000
+
+  # Chunking parameters
+  chunk_size: 4000
+  overlap: 200
+
+  # Model parameters
+  max_tokens: 4096
+
+  # Content generation targets
+  num_pairs: 25
+  num_cot_examples: 5
+  num_cot_enhance_examples: null
+
+  # Batch processing
+  batch_size: 32
+
+  # Quality settings
+  enable_deduplication: true
+  similarity_threshold: 0.8
+
+
+# Content curation parameters
+curate:
+  threshold: 7.0
+  batch_size: 5
+  inference_batch: 5
+  temperature: 0.1
+
+
+# Format conversion parameters
+format:
+  default: "jsonl"
+  include_metadata: true
+  pretty_json: true
+
+
+# Prompt templates
+prompts:
+
+  summary: |
+    Summarize the document in 3-5 concise sentences using only information explicitly stated in the document.
+
+    Cover the main topic, important entities, key facts, and conclusions when present.
+
+    Do not use outside knowledge, assumptions, interpretations, or details that are not supported by the text.
+
+    If the document is incomplete or uncertain about a fact, preserve that uncertainty.
+
+    Return only the summary text.
+
+    Document:
+    {text}
+
+
+  qa_generation: |
+    Create a high-quality, factually grounded QA dataset from the provided text for LLM training.
+
+    Requirements:
+
+    1. Generate as many high-quality, non-duplicate QA pairs as the text safely supports. Target up to 25 for a substantive document, but return fewer for short or sparse text.
+
+    2. Every answer must be fully and directly supported by the provided text.
+
+    3. Do not use external knowledge, assumptions, calculations not shown in the text, or plausible-sounding additions.
+
+    4. Prefer important and specific facts such as:
+       - definitions
+       - dates
+       - quantities
+       - entities
+       - processes
+       - policies
+       - requirements
+       - eligibility conditions
+       - causes and effects
+       - limitations
+       - conclusions
+
+    5. Include a mixture of question types where supported by the source.
+
+    6. Do not create questions whose answers require inference beyond the provided text.
+
+    7. Each question must be specific, unambiguous, and answerable from the text alone.
+
+    8. Each answer must be concise, complete, and self-contained.
+
+    9. Preserve qualifiers such as "may", "typically", "according to", conditions, exceptions, and uncertainty when they appear in the source.
+
+    10. Do not repeat the same fact using differently worded questions.
+
+    11. Do not create generic questions with vague answers.
+
+    12. Before returning each pair, verify that every factual claim in the answer is explicitly supported by the source.
+
+    13. Never generate placeholder content such as:
+        "Question 1?"
+        "Answer 1."
+        "Question?"
+        "Answer."
+
+    14. Do not invent missing information merely to reach the requested number of QA pairs.
+
+    15. If the document does not contain enough reliable information, return fewer QA pairs.
+
+    16. If the text contains no reliable factual content, return an empty JSON array.
+
+    Return valid JSON only, with no Markdown or explanation:
+
+    [
+      {{
+        "question": "Question?",
+        "answer": "Answer."
+      }}
+    ]
+
+    Text:
+    {text}
+
+
+  qa_rating: |
+    Evaluate each supplied question-answer pair strictly against the provided source content.
+
+    Scoring criteria (1-10 total):
+
+    - Accuracy (0-4): Every claim in the answer is directly supported by the source text.
+    - Relevance (0-2): The question addresses meaningful source content.
+    - Clarity (0-2): The question and answer are precise and unambiguous.
+    - Usefulness (0-2): The pair is valuable, specific, and non-duplicative for training.
+
+    Rules:
+
+    1. Rate every input pair.
+
+    2. Do not add, remove, rewrite, reorder, or merge pairs.
+
+    3. Use ratings 1-3 for unsupported, hallucinated, contradictory, or unanswerable answers.
+
+    4. Use ratings 4-6 for partially supported, vague, trivial, or weakly phrased pairs.
+
+    5. Use ratings 7-8 for accurate and useful pairs with minor limitations.
+
+    6. Use ratings 9-10 only when the pair is fully grounded, important, clear, specific, and useful.
+
+    7. Preserve the exact original question and answer strings.
+
+    8. Return valid JSON only.
+
+    Source text:
+    {text}
+
+    QA pairs to rate:
+    {pairs}
+
+
+  cot_generation: |
+    Create evidence-grounded reasoning examples from the provided text for LLM training.
+
+    Requirements:
+
+    1. Generate only questions whose answers can be determined from the provided text.
+
+    2. Prefer questions that require combining two or more explicitly stated facts, comparing stated details, following a stated process, or identifying a stated cause and effect.
+
+    3. Do not use outside knowledge or make unstated assumptions.
+
+    4. The "reasoning" field must contain a short, auditable rationale based only on explicit facts from the source.
+
+    5. Do not invent intermediate facts or unsupported conclusions.
+
+    6. The final answer must be concise and fully supported by the source.
+
+    7. Generate up to 10 strong examples, but return fewer when the source does not support more.
+
+    8. Return an empty array if no safely supported examples can be generated.
+
+    9. Never generate placeholder questions, reasoning, or answers.
+
+    10. Before returning an example, verify that every factual claim in both "reasoning" and "answer" is supported by the source.
+
+    Return valid JSON only, with no Markdown or explanation:
+
+    [
+      {{
+        "question": "Question requiring synthesis of stated facts?",
+        "reasoning": "The text states that [fact 1]. It also states that [fact 2]. Together, these facts support the answer.",
+        "answer": "Concise answer."
+      }}
+    ]
+
+    Text:
+    {text}
+
+
+  cot_enhancement: |
+    Enhance the supplied conversations with concise, evidence-grounded rationales only when the conversation itself contains enough information to support them.
+
+    Rules:
+
+    1. Preserve every original message, role, ordering, and original assistant answer exactly.
+
+    2. Do not introduce new factual claims, external knowledge, assumptions, or fabricated reasoning.
+
+    3. Add a rationale only when it can be derived directly from information already present in the conversation.
+
+    4. For complex responses, prepend a brief rationale using explicit facts from the conversation, followed by the unchanged original answer.
+
+    5. {include_simple_steps} controls whether to add the same type of brief rationale to simple responses. If false, leave simple responses unchanged.
+
+    6. If support is missing, ambiguous, or incomplete, leave the assistant response unchanged rather than inventing a rationale.
+
+    7. Return valid JSON only, with no Markdown or explanation.
+
+    Return the enhanced conversations as a JSON array:
+
+    [
+      [
+        {{"role": "system", "content": "System message"}},
+        {{"role": "user", "content": "User question"}},
+        {{"role": "assistant", "content": "Rationale: [brief rationale grounded in the conversation]\n\n[unchanged original answer]"}}
+      ]
+    ]
+
+    Original conversations:
+    {conversations}
