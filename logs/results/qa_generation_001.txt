@@ -1,0 +1,41 @@
+{
+  "summary": "Here's a concise summary of the document:\n\nThe document defines MSME classification based on investment and turnover limits: micro enterprises have investment up to \u20b92.5 crore and turnover up to \u20b910 crore; small enterprises up to \u20b925 crore investment and \u20b9100 crore turnover; medium enterprises up to \u20b9125 crore investment and \u20b9500 crore turnover. It outlines that enterprises must register on the Udyam portal to obtain a Udyam Registration Certificate, which banks use for Priority Sector Lending (PSL) classification. A separate Udyam Assist Certificate is available for informal micro enterprises lacking PAN or GSTIN, treated at par with URC for PSL benefits and classified as micro enterprises. RBI mandates that all bank loans to MSMEs qualify for PSL, with a sub-target of 7.5% of Adjusted Net Bank Credit directed toward micro-enterprises. Banks assess working capital based on business cycles and short-term needs, with limits computed on minimum 20% of estimated turnover up to \u20b95 crore. Composite loans up to \u20b91 crore can combine working capital and term loan requirements. Retail and wholesale trade are included as MSMEs for PSL purposes. Priority Sector Lending targets large sections, weaker sections, and employment-intensive sectors like agriculture and MSMEs. Cluster financing is promoted through credit-linkage initiatives in identified clusters.",
+  "qa_pairs": [
+    {
+      "question": "...",
+      "answer": "..."
+    },
+    {
+      "question": "What is the Certified Credit Counsellors (CCC) Scheme?",
+      "answer": "In terms of announcement in para 48 of the First Bi-monthly Monetary Policy Statement, 2016-17, the Reserve Bank laid down a framework for accreditation of credit counsellors, which was shared with SIDBI for laying down operational guidelines. Accordingly, the scheme was launched by SIDBI in July 2017. As per the scheme, Certified Credit Counsellors are institutions or individuals registered with SIDBI who shall assist MSMEs in preparing project reports in a professional manner, which would help banks make more informed credit decisions."
+    },
+    {
+      "question": "In which paragraph and policy statement was the framework for the Certified Credit Counsellors scheme announced?",
+      "answer": "The framework was announced in paragraph 48 of the First Bi-monthly Monetary Policy Statement, 2016-17."
+    },
+    {
+      "question": "With which organization was the CCC accreditation framework shared for developing operational guidelines?",
+      "answer": "The CCC accreditation framework was shared with SIDBI for laying down operational guidelines."
+    },
+    {
+      "question": "Who launched the Certified Credit Counsellors scheme and in what month and year?",
+      "answer": "The scheme was launched by SIDBI in July 2017."
+    },
+    {
+      "question": "What is the primary role of Certified Credit Counsellors registered with SIDBI?",
+      "answer": "Certified Credit Counsellors assist MSMEs in preparing project reports in a professional manner to help banks make more informed credit decisions."
+    },
+    {
+      "question": "Who are eligible to become Certified Credit Counsellors under the scheme?",
+      "answer": "Institutions or individuals registered with SIDBI are eligible to become Certified Credit Counsellors under the scheme."
+    },
+    {
+      "question": "How does the CCC scheme support the credit decision-making process for banks?",
+      "answer": "By enabling Certified Credit Counsellors to prepare professional project reports for MSMEs, the scheme helps banks make more informed credit decisions."
+    },
+    {
+      "question": "Under which monetary policy initiative was the CCC scheme framework originally laid down?",
+      "answer": "The CCC scheme framework was laid down under para 48 of the First Bi-monthly Monetary Policy Statement, 2016-17."
+    }
+  ]
+}
