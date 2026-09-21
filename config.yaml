@@ -3,7 +3,7 @@ llm:
 
 api-endpoint:
   api_base: "https://openrouter.ai/api/v1"
-  api_key: "${OPENROUTER_API_KEY}"
+  api_key: "${API_ENDPOINT_KEY}"
   model: "nvidia/nemotron-3.5-lightning:free"
   max_retries: 3
   sleep_time: 0.5
@@ -165,9 +165,6 @@ prompts:
     7. Preserve the exact original question and answer strings.
 
     8. Return valid JSON only.
-
-    Source text:
-    {text}
 
     QA pairs to rate:
     {pairs}
