@@ -17,7 +17,7 @@ ingest:
 
 # LLM generation parameters
 generation:
-  temperature: 0.7
+  temperature: 0.3
   top_p: 0.95
 
   # Document processing strategy
@@ -76,69 +76,65 @@ prompts:
     Document:
     {text}
 
-
   qa_generation: |
-    Create a high-quality, factually grounded QA dataset from the provided text for LLM training.
+    Generate a high-quality question-answer dataset from the provided document.
 
-    Requirements:
+    The questions and answers should be based primarily on the information
+    contained in the document. Use the document as the only source of factual
+    information.
 
-    1. Generate as many high-quality, non-duplicate QA pairs as the text safely supports. Target up to 25 for a substantive document, but return fewer for short or sparse text.
+    Generate between 5 and 15 useful QA pairs, depending on how much relevant
+    information is available in the document.
 
-    2. Every answer must be fully and directly supported by the provided text.
+    Focus on important banking and regulatory information, including:
+    - definitions
+    - classifications
+    - eligibility criteria
+    - limits and thresholds
+    - dates
+    - percentages
+    - regulatory requirements
+    - procedures
+    - policies
+    - responsibilities
+    - organizations
+    - conditions and exceptions
+    - lending requirements
+    - financial limits
+    - important facts and relationships
 
-    3. Do not use external knowledge, assumptions, calculations not shown in the text, or plausible-sounding additions.
+    Questions should be specific and useful for training a banking-domain
+    language model.
 
-    4. Prefer important and specific facts such as:
-       - definitions
-       - dates
-       - quantities
-       - entities
-       - processes
-       - policies
-       - requirements
-       - eligibility conditions
-       - causes and effects
-       - limitations
-       - conclusions
+    Answers should be concise but sufficiently detailed to answer the question
+    completely.
 
-    5. Include a mixture of question types where supported by the source.
+    Use the exact figures, percentages, dates, names, limits and conditions
+    given in the document.
 
-    6. Do not create questions whose answers require inference beyond the provided text.
+    Do not invent facts or introduce unrelated information.
 
-    7. Each question must be specific, unambiguous, and answerable from the text alone.
+    Avoid generic questions such as "What is this document about?"
 
-    8. Each answer must be concise, complete, and self-contained.
+    Avoid duplicate or nearly identical questions.
 
-    9. Preserve qualifiers such as "may", "typically", "according to", conditions, exceptions, and uncertainty when they appear in the source.
+    Create different types of questions where appropriate:
+    - What is...
+    - What are the limits...
+    - What percentage...
+    - Which entities...
+    - What requirements...
+    - How is something classified...
+    - What conditions apply...
+    - What facilities or provisions are available...
 
-    10. Do not repeat the same fact using differently worded questions.
+    Do not generate placeholder questions or answers.
 
-    11. Do not create generic questions with vague answers.
+    Return ONLY a valid JSON array.
+    Each item must have exactly two fields: "question" and "answer".
 
-    12. Before returning each pair, verify that every factual claim in the answer is explicitly supported by the source.
+    SOURCE DOCUMENT:
 
-    13. Never generate placeholder content such as:
-        "Question 1?"
-        "Answer 1."
-        "Question?"
-        "Answer."
-
-    14. Do not invent missing information merely to reach the requested number of QA pairs.
-
-    15. If the document does not contain enough reliable information, return fewer QA pairs.
-
-    16. If the text contains no reliable factual content, return an empty JSON array.
-
-    Return valid JSON only, with no Markdown or explanation:
-
-    [
-      {{
-        "question": "Question?",
-        "answer": "Answer."
-      }}
-    ]
-
-    Text:
     {text}
 
 
